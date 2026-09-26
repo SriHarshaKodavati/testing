@@ -1,0 +1,58 @@
+I want to implement a new way of displaying the existing Use Case table directly from our main listing page.
+
+First, understand the existing structure of our project:
+
+- We have a main listing page that uses AG Grid to display a list of records.
+- Each row in this main listing represents one record.
+- When a user clicks on a record, it currently opens a form/details page for that record.
+- The form displays all the attributes of that record as fields. These attributes are essentially the same data/columns that are shown in the main listing.
+- Inside this form, we already have a Use Cases table.
+- The Use Cases table contains the Use Cases linked to that particular parent record.
+- One parent record can have multiple Use Cases.
+- Each Use Case is itself a complete record with multiple attributes/columns.
+- Therefore, the relationship is essentially:
+  
+  Parent Record
+      └── Use Case 1 → multiple fields
+      └── Use Case 2 → multiple fields
+      └── Use Case 3 → multiple fields
+      └── ...
+
+The problem I am trying to solve is that users currently have to open the parent record's form to see its linked Use Cases.
+
+I want to explore showing the Use Cases directly within the main listing page, without requiring the user to open the parent record form.
+
+For this approach, implement it using AG Grid's native Master/Detail functionality if it fits our existing architecture.
+
+Expected UI behavior:
+
+- Keep the existing main AG Grid and its current functionality.
+- Add an expand/collapse control for each parent record.
+- When the user expands a parent record, display a nested/detail AG Grid underneath that row.
+- This nested grid should display the Use Cases belonging to that specific parent record.
+- The columns in the nested Use Case grid should correspond to the important/relevant columns already used by our existing Use Cases table inside the parent form.
+- Each parent record can have 0, 1, or many Use Cases.
+- If there are no Use Cases, handle this cleanly.
+- The existing behavior of clicking the parent record to open its form must continue to work.
+- The expand/collapse interaction must not interfere with the existing row-click behavior.
+- Reuse the existing Use Case API, service, model, data-fetching logic, and existing Use Case table configuration wherever possible.
+- Do not create duplicate logic if the existing implementation can be reused.
+- Preserve the existing listing's sorting, filtering, pagination, permissions, styling, loading states, and other functionality.
+- Follow the existing project's architecture, components, naming conventions, and UI patterns.
+- Do not make unrelated changes.
+
+Before making changes, inspect the existing implementation of:
+1. The main AG Grid listing.
+2. The parent record form/details page.
+3. The existing Use Cases table inside that form.
+4. The Use Case data model/API/service.
+5. Any existing AG Grid Master/Detail or expandable-row patterns in the project.
+
+Then implement the solution using the existing project patterns.
+
+After implementation, explain:
+1. Which files/components were changed.
+2. How the parent-to-Use-Case relationship is being handled.
+3. How the nested Use Case grid gets its data.
+4. Whether the existing Use Case table/columns/data logic was reused.
+5. Any performance considerations, especially when the main listing contains many parent records.
