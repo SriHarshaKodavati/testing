@@ -1,0 +1,25 @@
+Generate an Excel file that visually demonstrates a parent record → multiple Use Cases relationship using Excel's native collapsible row/grouping functionality.
+
+The purpose is to create a polished demo file that I can show to senior leadership, so focus only on the Excel file itself and do not modify or discuss any application functionality.
+
+Requirements:
+
+- Create a single worksheet with realistic, meaningful sample business data.
+- Have multiple parent records, with each parent representing a realistic business entity.
+- Each parent record should have several attributes/columns.
+- Each parent can have multiple Use Cases.
+- Each Use Case should have multiple meaningful attributes/columns.
+- Each parent record should be followed by its Use Case section.
+- The Use Case section should start only one cell to the right of the first column of the parent record, rather than starting after all parent columns.
+- Each parent should have its own Use Case column-header row.
+- The Use Case header and its Use Case records should be grouped together using Excel's native outline/grouping functionality.
+- The Use Case rows should be collapsed by default.
+- The Excel file should show the +/- outline controls so that expanding a parent reveals its Use Case header and Use Case records.
+- Collapsing the group should hide the Use Case section again.
+- Use different numbers of Use Cases for different parent records so the relationship is clear.
+- Include enough parent records and Use Cases to make the concept obvious, but keep the file clean and presentation-friendly.
+- Use professional formatting, readable column widths, clear headers, and meaningful realistic data.
+- Do not create separate sheets unless absolutely necessary.
+- This is only a visual/demo Excel file; do not generate code or modify any application/project functionality.
+
+The final output should be an actual .xlsx file that I can open in Microsoft Excel and demonstrate the expand/collapse behavior to leadership.
