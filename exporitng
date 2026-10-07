@@ -1,0 +1,659 @@
+I need you to implement an **Export Status / Downloads notification panel** on the existing listing page.
+
+### Existing context
+
+The listing page already has:
+
+* An AG Grid listing/table.
+* An **Export** button at the top of the page.
+* When the user clicks Export, an API call is made to the backend.
+* The backend generates an Excel file and returns the file.
+* Export size can vary significantly, so some exports may complete quickly while large exports may take considerably longer.
+* Currently, the user gets no clear indication that the export has started, is in progress, or has completed.
+
+I want to improve the UX by adding a **Downloads icon next to the existing Notifications icon**.
+
+The Downloads UI should behave similarly to the existing Notification panel in terms of:
+
+* Position
+* Size
+* Styling
+* Border radius
+* Shadow
+* Header
+* Opening/closing behavior
+* Overall visual language
+
+Do NOT create a completely different UI style for Downloads. It should feel like another notification-type panel in the same application.
+
+---
+
+## 1. Top-level UI
+
+In the existing top navigation/action area, keep:
+
+**Notifications | Downloads | Export**
+
+Add a **Downloads icon** immediately beside the existing Notifications icon.
+
+Use an appropriate download icon.
+
+The Downloads icon should have the same visual dimensions, spacing, hover behavior, and styling as the existing Notifications icon.
+
+Do not make the Downloads icon look like a large button.
+
+---
+
+## 2. Important: NO Download button inside the panel
+
+This is very important.
+
+The Downloads panel is **NOT a file manager**.
+
+Do NOT add:
+
+* Download buttons
+* "Download" links
+* Individual download actions
+* Extra buttons for each export
+
+The actual Excel file should be automatically downloaded when the backend export completes.
+
+The panel is only for showing the **status of exports**.
+
+The user should be able to open the Downloads panel and understand:
+
+* Which exports are running
+* Which exports have completed
+* When they were initiated/completed
+* The current state of the export
+
+---
+
+# 3. Export flow
+
+The expected flow is:
+
+```text
+User clicks Export
+        ↓
+Export API call starts
+        ↓
+Downloads icon animates
+        ↓
+Export appears in Downloads panel
+        ↓
+Status = "Export in progress..."
+        ↓
+Backend generates Excel
+        ↓
+Excel file is automatically downloaded
+        ↓
+Downloads icon animates again
+        ↓
+Status = "Export completed"
+```
+
+The user should NOT have to open the Downloads panel to make the download happen.
+
+The panel is purely informational.
+
+---
+
+# 4. When the user clicks Export
+
+Immediately after the user clicks the existing Export button:
+
+### Downloads icon
+
+Give the Downloads icon a subtle animation.
+
+I want an animation similar to the small visual feedback you get when something is added to the Downloads area on macOS.
+
+Do NOT make the animation excessive.
+
+Something like:
+
+* Small shake
+* Slight bounce
+* Very subtle scale change
+
+The animation should last roughly 500–700 ms.
+
+For example:
+
+```text
+Downloads icon
+     ↓
+small shake/bounce
+     ↓
+returns to normal
+```
+
+Do not continuously animate it while the export is running.
+
+The animation should happen once when the export starts.
+
+---
+
+# 5. Downloads badge
+
+If appropriate based on the existing application's design, show a small badge on the Downloads icon.
+
+For example:
+
+```text
+        2
+      ↓
+   Downloads
+```
+
+The badge should indicate that there are export items that need the user's attention.
+
+However, keep the badge visually consistent with the application's existing notification badge.
+
+Do not create a large or distracting badge.
+
+---
+
+# 6. Downloads panel
+
+When the user clicks the Downloads icon, open a panel similar to the existing Notifications panel.
+
+The panel should:
+
+* Open below/right of the Downloads icon
+* Have the same approximate width as the Notifications panel
+* Use the same border radius
+* Use the same shadow
+* Use the same background
+* Use the same typography
+* Use the same spacing
+* Use the same divider style
+* Have the same opening animation
+* Close when clicking outside
+* Close when clicking the Downloads icon again, if that matches the existing Notification behavior
+
+### Header
+
+Use:
+
+**Downloads**
+
+Optionally show a small count on the right if that matches the Notification panel design.
+
+Do not make the header unnecessarily large.
+
+---
+
+# 7. Export item inside the panel
+
+Each export should appear as an item inside the panel.
+
+For example:
+
+```text
+Downloads
+
+┌─────────────────────────────────────┐
+│ XLSX   Implementation_Listing.xlsx │
+│        Export in progress...        │
+│        Started just now             │
+└─────────────────────────────────────┘
+```
+
+The item should contain:
+
+### File type/icon
+
+Show a small Excel/XLSX-style icon or file icon.
+
+It should be visually subtle and consistent with the application's design.
+
+### File name
+
+Show the export filename.
+
+Example:
+
+`Implementation_Listing_07-Oct-2026.xlsx`
+
+If the filename is long, truncate it gracefully rather than allowing it to break the panel layout.
+
+### Status
+
+While the backend is processing:
+
+**Export in progress...**
+
+Optionally show a small spinner beside it.
+
+Example:
+
+`◌ Export in progress...`
+
+Do NOT show a fake percentage such as 30%, 50%, 70% unless the backend actually provides real export progress.
+
+If the API only tells us when the request starts and when it finishes, simply show:
+
+**Export in progress...**
+
+---
+
+# 8. When export completes
+
+When the backend finishes generating the Excel file:
+
+1. Automatically trigger the Excel download in the browser.
+2. Change the item's status from:
+
+**Export in progress...**
+
+to:
+
+**Export completed ✓**
+
+3. Trigger the Downloads icon animation again.
+
+The second animation is important because the user may not have the Downloads panel open.
+
+For example:
+
+```text
+Export in progress...
+
+        ↓
+
+Excel automatically downloads
+
+        ↓
+
+Downloads icon shakes/bounces
+
+        ↓
+
+Export completed ✓
+```
+
+The user should be able to understand from the icon animation that something happened.
+
+---
+
+# 9. Completed state
+
+Inside the Downloads panel, the completed item should look like:
+
+```text
+Downloads
+
+┌─────────────────────────────────────┐
+│ XLSX   Implementation_Listing.xlsx │
+│        Export completed ✓           │
+│        Just now                     │
+└─────────────────────────────────────┘
+```
+
+There should be **NO Download button**.
+
+The file has already been downloaded automatically.
+
+---
+
+# 10. Multiple exports
+
+The user may click Export multiple times.
+
+The Downloads panel should therefore support multiple export items.
+
+Example:
+
+```text
+Downloads
+
+┌─────────────────────────────────────┐
+│ XLSX   Implementation_Listing.xlsx │
+│        Export in progress...       │
+│        Just now                    │
+├─────────────────────────────────────┤
+│ XLSX   Implementation_Listing.xlsx │
+│        Export completed ✓          │
+│        2 minutes ago               │
+├─────────────────────────────────────┤
+│ XLSX   Implementation_Listing.xlsx │
+│        Export completed ✓          │
+│        10 minutes ago              │
+└─────────────────────────────────────┘
+```
+
+Newest export should appear at the top.
+
+Different exports may have different completion times.
+
+Do not assume that exports complete in the same order in which they were started.
+
+For example:
+
+```text
+Export A → large → still processing
+Export B → small → completed
+```
+
+The panel should correctly show:
+
+```text
+Export B
+✓ Export completed
+
+Export A
+◌ Export in progress...
+```
+
+---
+
+# 11. Different export sizes
+
+The purpose of this feature is specifically because exports can have very different sizes.
+
+For example:
+
+* Small export → completes quickly
+* Medium export → takes some time
+* Very large export → takes significantly longer
+
+Do not artificially show a progress percentage unless the backend provides real progress information.
+
+The UI should simply represent the actual state:
+
+```text
+In progress
+      ↓
+Completed
+```
+
+---
+
+# 12. Important backend/API behavior
+
+Do not change the existing backend unnecessarily.
+
+First inspect how the current Export functionality works.
+
+Determine:
+
+* What API is called
+* Whether the API request remains open until the Excel is generated
+* Whether the response directly contains the Excel file
+* How the frontend currently triggers the browser download
+* Whether multiple export requests are possible simultaneously
+
+Then integrate the UI around the existing behavior.
+
+If the current API only returns the Excel when the generation is complete, use the API request lifecycle:
+
+```text
+Request started → In progress
+
+Response received → Completed + trigger browser download
+```
+
+Do not invent backend progress tracking.
+
+If the current architecture already has an export job/status mechanism, use that instead.
+
+---
+
+# 13. Notification-panel design consistency
+
+This is a major requirement.
+
+The Downloads panel should visually look like it belongs to the same application as the Notifications panel.
+
+Before implementing it, inspect the existing Notifications component and reuse its:
+
+* Panel dimensions
+* CSS/design tokens
+* Typography
+* Colors
+* Spacing
+* Border
+* Border radius
+* Box shadow
+* Header structure
+* Item layout
+* Hover state
+* Divider
+* Open/close animation
+
+Ideally, reuse existing components/styles rather than creating a completely independent design.
+
+For example, if the application already has something like:
+
+```text
+NotificationPanel
+NotificationItem
+PanelHeader
+```
+
+follow the same structure for:
+
+```text
+DownloadsPanel
+ExportStatusItem
+```
+
+or reuse generic panel/item components where appropriate.
+
+Do not duplicate styling unnecessarily.
+
+---
+
+# 14. Animation requirements
+
+There should be two important animations.
+
+### Animation 1 — Export started
+
+When Export is clicked:
+
+```text
+Downloads icon
+    ↓
+small shake/bounce
+    ↓
+normal state
+```
+
+### Animation 2 — Export completed
+
+When the Excel file is ready and automatically downloaded:
+
+```text
+Downloads icon
+    ↓
+small shake/bounce
+    ↓
+normal state
+```
+
+The completion animation should be noticeable enough to communicate:
+
+**"Something has happened."**
+
+But it should still look professional and enterprise-appropriate.
+
+Avoid:
+
+* Large bouncing
+* Flashing
+* Excessive rotation
+* Continuous animation
+* Attention-grabbing effects
+
+Think of the subtle animation used by macOS when an item is added to Downloads.
+
+---
+
+# 15. Panel open state
+
+If the user has the Downloads panel open while an export is running:
+
+```text
+Downloads
+
+Implementation_Listing.xlsx
+
+◌ Export in progress...
+```
+
+When it completes, update the item in place:
+
+```text
+Downloads
+
+Implementation_Listing.xlsx
+
+✓ Export completed
+```
+
+Do not close the panel automatically.
+
+If the panel is closed when the export completes, only the Downloads icon/badge animation should notify the user.
+
+---
+
+# 16. UX example
+
+The complete experience should feel like this:
+
+### Initial state
+
+```text
+Notifications   Downloads   Export
+                  ↓
+              normal icon
+```
+
+### User clicks Export
+
+```text
+Notifications   Downloads   Export
+                  ↓
+             [small shake]
+
+Downloads panel:
+Implementation_Listing.xlsx
+◌ Export in progress...
+```
+
+### Backend finishes
+
+```text
+Excel automatically downloads
+
+Notifications   Downloads   Export
+                  ↓
+             [small shake]
+
+Downloads panel:
+Implementation_Listing.xlsx
+✓ Export completed
+```
+
+No additional Download button.
+
+---
+
+# 17. Error handling
+
+Also handle export failure.
+
+If the API fails, show:
+
+```text
+Implementation_Listing.xlsx
+✕ Export failed
+```
+
+Use an appropriate error state consistent with the application's existing notification/error styling.
+
+The Downloads icon can also perform the same subtle attention animation when an export fails.
+
+Do not show a fake "completed" state if the API fails.
+
+---
+
+# 18. Accessibility
+
+Make sure:
+
+* Downloads icon has an accessible label such as `Downloads`
+* Tooltip can say `Downloads`
+* Panel is keyboard accessible
+* Focus behavior follows the application's existing notification panel
+* Animation does not prevent interaction
+* Respect `prefers-reduced-motion` where possible
+
+---
+
+# 19. Do not change unrelated functionality
+
+This is important.
+
+Do not modify:
+
+* Existing AG Grid behavior
+* Existing listing columns
+* Existing filters
+* Existing row actions
+* Existing Export API behavior unless required
+* Existing Notifications behavior
+* Existing navigation
+* Existing page layout
+
+Only add the Downloads/export-status experience around the existing Export functionality.
+
+---
+
+# 20. Before coding
+
+First inspect the existing project and identify:
+
+1. The listing page component.
+2. The existing Export button/functionality.
+3. The API call used for Excel export.
+4. How the browser download is currently triggered.
+5. The existing Notifications icon.
+6. The existing Notifications panel/component.
+7. Existing design tokens/components that should be reused.
+
+Then implement the Downloads experience using the project's existing architecture and styling conventions.
+
+Do not create a parallel design system.
+
+After implementation, test at least these scenarios:
+
+### Scenario 1
+
+Small export → starts → completes → automatically downloads → icon animates.
+
+### Scenario 2
+
+Large export → stays in progress for longer → panel shows in-progress state → eventually completes.
+
+### Scenario 3
+
+User closes the panel while export is running → export continues → icon animates when completed.
+
+### Scenario 4
+
+Two exports running simultaneously → each maintains its own status.
+
+### Scenario 5
+
+Export fails → panel shows failed status.
+
+### Scenario 6
+
+User opens Downloads panel while an export is already in progress → current status is shown immediately.
+
+The final result should feel like a **native Downloads/status experience integrated into the existing notification system**, not like a separate file-management feature.
